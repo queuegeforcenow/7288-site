@@ -16,6 +16,8 @@ app.use('/api/auth', authRouter);
 const blackjackRouter = require('./blackjack');
 app.use('/api/blackjack', blackjackRouter);
 
+const rankingRouter = require('./ranking');
+app.use('/api/ranking', rankingRouter);
 
 
 // 認証ミドルウェア
