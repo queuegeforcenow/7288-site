@@ -13,6 +13,10 @@ app.use(express.json());
 const authRouter = require('./auth');
 app.use('/api/auth', authRouter);
 
+const blackjackRouter = require('./blackjack');
+app.use('/api/blackjack', blackjackRouter);
+
+
 
 // 認証ミドルウェア
 function authenticateToken(req, res, next) {
