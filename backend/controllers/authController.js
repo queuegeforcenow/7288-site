@@ -1,4 +1,4 @@
-const userModel = require('../models/userModel');
+const User = require('../modules/userModel');
 const { generateToken } = require('../utils/jwtUtil');
 
 async function register(req, res) {
