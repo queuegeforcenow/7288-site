@@ -26,3 +26,17 @@ CREATE TABLE users (
   total_bet BIGINT DEFAULT 0,
   balance BIGINT DEFAULT 0
 );
+
+
+CREATE TABLE vip_links (
+  id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE vip_claims (
+  id SERIAL PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  link_id INTEGER REFERENCES vip_links(id),
+  claimed_at TIMESTAMP NOT NULL
+);
