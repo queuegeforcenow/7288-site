@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Mines Game</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body { font-family: sans-serif; padding:20px; text-align:center; }
+  #board { display:grid; grid-template-columns: repeat(5,60px); gap:5px; justify-content:center; margin-top:20px;}
+  .cell { width:60px; height:60px; background:#4caf50; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.2em; border-radius:4px; }
+  .disabled { background:#777; cursor:default; }
+</style>
+</head>
+<body>
+<h1>Mines</h1>
+<label>Bet: <input type="number" id="bet" value="1000"></label>
+<label>Mines: <input type="number" id="mines" value="3" min="1" max="24"></label>
+<button id="startBtn">Start</button>
+<p id="status"></p>
+<div id="board"></div>
+<button id="cashoutBtn" disabled>Cash Out</button>
+
+<script>
+const token = localStorage.getItem('token');
+if(!token) location.href='/login.html';
+
+let gameId = null;
+let boardElems = [];
+const status = document.getElementById('status');
+const board = document.getElementById('board');
+const cashoutBtn = document.getElementById('cashoutBtn');
+
+document.getElementById('startBtn').onclick = async ()=>{
+  const bet   = Number(document.getElementById('bet').value);
+  const mines = Number(document.getElementById('mines').value);
+  const res = await fetch('/api/mines/start',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body:JSON.stringify({bet,mines})
+  });
+  const data = await res.json();
+  if(!res.ok){ alert(data.message); return; }
+  gameId = data.gameId;
+  board.innerHTML='';
+  boardElems=[];
+  for(let i=0;i<data.boardSize;i++){
+    const div=document.createElement('div');
+    div.className='cell';
+    div.textContent='';
+    div.dataset.idx=i;
+    div.onclick=openCell;
+    board.appendChild(div);
+    boardElems.push(div);
+  }
+  status.textContent='Game started! Multiplier: 1.00';
+  cashoutBtn.disabled=false;
+};
+
+async function openCell(){
+  if(!gameId) return;
+  const idx=this.dataset.idx;
+  const res=await fetch('/api/mines/open',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body:JSON.stringify({gameId,index:idx})
+  });
+  const data=await res.json();
+  if(data.result==='lose'){
+    this.textContent='💣';
+    this.classList.add('disabled');
+    status.textContent='💥 You hit a mine! You lose.';
+    endSession();
+  }else{
+    this.textContent='✅';
+    this.classList.add('disabled');
+    status.textContent=`Safe! Multiplier: ${data.nextMultiplier}`;
+  }
+}
+
+cashoutBtn.onclick = async ()=>{
+  if(!gameId) return;
+  const res=await fetch('/api/mines/cashout',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body:JSON.stringify({gameId})
+  });
+  const data=await res.json();
+  if(data.result==='win'){
+    status.textContent=`🎉 You cashed out ${data.payout} coins!`;
+  }else{
+    status.textContent=data.message;
+  }
+  endSession();
+};
+function endSession(){
+  gameId=null;
+  boardElems.forEach(e=>e.onclick=null);
+  cashoutBtn.disabled=true;
+}
+</script>
+</body>
+</html>
