@@ -37,6 +37,13 @@ CREATE TABLE vip_links (
   created_at TIMESTAMP NOT NULL
 );
 
+CREATE TABLE bonus_links (
+  id UUID PRIMARY KEY,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  used_by UUID[] DEFAULT '{}'
+);
+
+
 CREATE TABLE vip_claims (
   id SERIAL PRIMARY KEY,
   user_id UUID REFERENCES users(id),
