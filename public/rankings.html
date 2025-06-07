@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>ランキング</title>
+  <style>
+    table { border-collapse: collapse; width: 90%; margin: auto; }
+    th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
+    th { background-color: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">ランキングトップ100</h1>
+  <table id="rankingTable">
+    <thead>
+      <tr>
+        <th>順位</th>
+        <th>ユーザーネーム</th>
+        <th>ランク</th>
+        <th>累計掛け金</th>
+        <th>勝利数</th>
+        <th>敗北数</th>
+        <th>勝率(%)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) location.href = '/login.html';
+
+    fetch('/api/rankings', {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector('#rankingTable tbody');
+      tbody.innerHTML = '';
+
+      data.rankings.forEach((user, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${user.username}</td>
+          <td>${user.rank}</td>
+          <td>${user.total_bet_amount.toLocaleString()}</td>
+          <td>${user.total_wins}</td>
+          <td>${user.total_losses}</td>
+          <td>${user.win_rate}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    });
+  </script>
+</body>
+</html>
