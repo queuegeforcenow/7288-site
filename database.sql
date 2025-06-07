@@ -18,6 +18,9 @@ CREATE TABLE vip_bonus_redeemed (
 
 ALTER TABLE users ADD COLUMN last_work TIMESTAMP;
 
+ALTER TABLE users ADD COLUMN last_work_at TIMESTAMP;
+
+
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
