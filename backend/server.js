@@ -22,6 +22,10 @@ app.use('/api/ranking', rankingRouter);
 const vipBonusRouter = require('./vipBonus');
 app.use('/api/vip', vipBonusRouter);
 
+const adminRouter = require('./admin');
+app.use('/api/admin', adminRouter);
+
+
 // 認証ミドルウェア
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
