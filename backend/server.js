@@ -28,6 +28,9 @@ app.use('/api/admin', adminRouter);
 const workRoutes = require('./routes/work');
 app.use('/api/work', workRoutes);
 
+const minesRoutes = require('./routes/mines');
+app.use('/api/mines', minesRoutes);
+
 
 // 認証ミドルウェア
 function authenticateToken(req, res, next) {
