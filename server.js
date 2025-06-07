@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-const { register, login } = require('./controllers/authController');
+const authController = require('./backend/controllers/authController');
 
 const app = express();
 
