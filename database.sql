@@ -17,3 +17,12 @@ CREATE TABLE vip_bonus_redeemed (
 -- usersテーブルにlast_work追加
 
 ALTER TABLE users ADD COLUMN last_work TIMESTAMP;
+
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(16) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  total_bet BIGINT DEFAULT 0,
+  balance BIGINT DEFAULT 0
+);
