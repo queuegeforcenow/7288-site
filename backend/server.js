@@ -37,6 +37,9 @@ app.use('/api/bonus', bonusRoutes);
 const rankingRoutes = require('./routes/rankings');
 app.use('/api/rankings', rankingRoutes);
 
+const transferRoutes = require('./routes/transfer');
+app.use('/api/transfer', transferRoutes);
+
 
 // 認証ミドルウェア
 function authenticateToken(req, res, next) {
