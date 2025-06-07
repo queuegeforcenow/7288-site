@@ -25,6 +25,9 @@ app.use('/api/vip', vipBonusRouter);
 const adminRouter = require('./admin');
 app.use('/api/admin', adminRouter);
 
+const workRoutes = require('./routes/work');
+app.use('/api/work', workRoutes);
+
 
 // 認証ミドルウェア
 function authenticateToken(req, res, next) {
