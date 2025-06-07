@@ -31,6 +31,9 @@ app.use('/api/work', workRoutes);
 const minesRoutes = require('./routes/mines');
 app.use('/api/mines', minesRoutes);
 
+const bonusRoutes = require('./routes/bonus');
+app.use('/api/bonus', bonusRoutes);
+
 
 // 認証ミドルウェア
 function authenticateToken(req, res, next) {
