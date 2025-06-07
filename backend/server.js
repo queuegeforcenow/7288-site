@@ -19,6 +19,8 @@ app.use('/api/blackjack', blackjackRouter);
 const rankingRouter = require('./ranking');
 app.use('/api/ranking', rankingRouter);
 
+const vipBonusRouter = require('./vipBonus');
+app.use('/api/vip', vipBonusRouter);
 
 // 認証ミドルウェア
 function authenticateToken(req, res, next) {
