@@ -10,6 +10,10 @@ const { pool } = require('./db');
 
 app.use(express.json());
 
+const authRouter = require('./auth');
+app.use('/api/auth', authRouter);
+
+
 // 認証ミドルウェア
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
