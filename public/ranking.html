@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ランキング</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  th { background-color: #f4f4f4; }
+</style>
+</head>
+<body>
+<h1>ランキング</h1>
+<table>
+  <thead>
+    <tr>
+      <th>順位</th>
+      <th>ユーザーネーム</th>
+      <th>総掛け金</th>
+      <th>ランク</th>
+    </tr>
+  </thead>
+  <tbody id="rankingBody">
+    <tr><td colspan="4">読み込み中...</td></tr>
+  </tbody>
+</table>
+<button id="backBtn">ポータルへ戻る</button>
+
+<script>
+const token = localStorage.getItem('token');
+if (!token) {
+  window.location.href = '/login.html';
+}
+
+async function fetchRanking() {
+  const res = await fetch('/api/ranking', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (!res.ok) {
+    alert('ランキング取得に失敗しました');
+    return;
+  }
+  const data = await res.json();
+  const tbody = document.getElementById('rankingBody');
+  tbody.innerHTML = '';
+  data.forEach((user, index) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${user.username}</td>
+      <td>${user.totalBet.toLocaleString()}円</td>
+      <td>${user.rank}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  window.location.href = '/portal.html';
+});
+
+fetchRanking();
+</script>
+</body>
+</html>
